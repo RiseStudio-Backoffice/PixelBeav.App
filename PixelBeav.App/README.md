@@ -1,7 +1,7 @@
 # PixelBeav – WPF App (.NET 9.0) • Version: v1.1.0
 
 
-Erstellt anhand des **Projekt‑Briefs v1.0 (STRIKT)**. 
+Erstellt anhand des **Projekt‑Briefs v1.0 (STRIKT)**.
 
 ## Kerndesign
 - Links: **nur Spiel‑Thumbnails** (WrapPanel), **keine** Beschriftungen.
