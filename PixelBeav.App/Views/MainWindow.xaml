@@ -5,49 +5,69 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="359*"/>
+            <ColumnDefinition Width="241*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Left: Thumbnails only (no text/buttons) -->
-        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,12,0" ClipToBounds="False">
-            <ItemsControl ItemsSource="{Binding FilteredGames}" Width="672" HorizontalAlignment="Left">
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,20,0" ClipToBounds="False" Margin="10,10,10,10">
+            <ItemsControl ItemsSource="{Binding FilteredGames}" Width="602" HorizontalAlignment="Left">
                 <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate><UniformGrid Columns="2"/></ItemsPanelTemplate>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2"/>
+                    </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    
 
-<DataTemplate>
-    <Border Margin="8" CornerRadius="10" BorderThickness="1" BorderBrush="#33000000" Width="320" Height="150" SnapsToDevicePixels="True">
-        <Border.Background>
-            <ImageBrush ImageSource="{Binding HeaderImageUri, FallbackValue=/Assets/placeholder.png}" Stretch="Fill"/>
-        </Border.Background>
-        <Grid ClipToBounds="False">
-            <!-- Full-tile select button at back -->
-            <Button Background="{x:Null}" BorderBrush="{x:Null}" Cursor="Hand"
-                    Command="{Binding DataContext.SelectGameCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                    CommandParameter="{Binding}"
-                    Panel.ZIndex="0" />
-            <!-- Title overlay -->
-            <TextBlock Text="{Binding Title}" FontWeight="Bold" Margin="6"
-                       HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Foreground="White" TextTrimming="CharacterEllipsis" MaxWidth="260" Panel.ZIndex="1">
-                <TextBlock.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="4" Opacity="0.8"/>
-                </TextBlock.Effect>
-            </TextBlock>
-            <!-- Delete button -->
-            <Button Width="20" Height="20" Padding="0"
-                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0"
-                    Command="{Binding DataContext.DeleteGameCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                    CommandParameter="{Binding}"
-                    Background="{x:Null}" BorderBrush="{x:Null}" ToolTip="Entfernen" Panel.ZIndex="2">
-                <Image Source="pack://application:,,,/PixelBeav.App;component/Assets/close.png" Width="20" Height="20" Stretch="None"/>
-            </Button>
-        </Grid>
-    </Border>
-</DataTemplate>
+
+                    <DataTemplate>
+                        <Border Margin="2" CornerRadius="10" BorderThickness="1" BorderBrush="#33000000" Width="296" Height="150" SnapsToDevicePixels="True">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding HeaderImageUri, FallbackValue=/Assets/placeholder.png}" Stretch="Fill"/>
+                            </Border.Background>
+                            <Grid ClipToBounds="False">
+                                <!-- Full-tile select button at back -->
+                                 <Button Background="{x:Null}" BorderBrush="{x:Null}" Cursor="Hand"
+                                    Command="{Binding DataContext.SelectGameCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    CommandParameter="{Binding}"
+                                    Panel.ZIndex="0" 
+                                 />
+                                <!-- Title overlay -->
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold" Margin="6"
+                                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                                    Foreground="White" TextTrimming="CharacterEllipsis" MaxWidth="260" Panel.ZIndex="1">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="0" BlurRadius="4" Opacity="0.8"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <!-- Delete button
+                                <Button Width="20" Height="20" Padding="0"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,0"
+                                    Command="{Binding DataContext.DeleteGameCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    CommandParameter="{Binding}"
+                                    Background="{x:Null}" BorderBrush="{x:Null}" ToolTip="Entfernen" Panel.ZIndex="2">
+                                    <Image Source="pack://application:,,,/PixelBeav.App;component/Assets/close.png" Width="20" Height="20" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Button> -->
+                                <Button Width="24" Height="24" Padding="0"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="3"
+                                    Background="{x:Null}" BorderBrush="{x:Null}" ToolTip="Menü" Panel.ZIndex="2">
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Entfernen"
+                                                Command="{Binding DataContext.DeleteGameCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
+                                            />
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                    <Grid Width="14" Height="12" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True">
+                                        <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Top"/>
+                                        <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Center"/>
+                                        <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Bottom"/>
+                                    </Grid>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
 
 
                 </ItemsControl.ItemTemplate>
@@ -55,7 +75,7 @@
         </ScrollViewer>
 
         <!-- Right: Details -->
-        <Grid Grid.Column="1" Margin="16">
+        <Grid Grid.Column="1" Margin="16,16,16,16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -64,7 +84,8 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,12"><Button Content="Blacklist anzeigen" Command="{Binding ShowBlacklistCommand}" Margin="0,0,8,0"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <Button Content="Blacklist anzeigen" Command="{Binding ShowBlacklistCommand}" Margin="0,0,8,0"/>
                 <Button Content="Steam einlesen" Command="{Binding ImportSteamCommand}" Margin="0,0,8,0"/>
                 <Button Content="Duplikate entfernen" Command="{Binding DeduplicateCommand}" Margin="0,0,8,0"/>
                 <Button Content="Ordner wählen" Command="{Binding ChooseFolderCommand}" Margin="0,0,8,0"/>
