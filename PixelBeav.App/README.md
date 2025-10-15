@@ -1,7 +1,7 @@
 # PixelBeav – WPF App (.NET 9.0) • Version: v1.1.0
 
 
-Erstellt anhand des **Projekt‑Briefs v1.0 (STRIKT)**. 
+Erstellt anhand des **Projekt‑Briefs v1.0 (STRIKT)**.
 
 ## Kerndesign
 - Links: **nur Spiel‑Thumbnails** (WrapPanel), **keine** Beschriftungen.
@@ -17,3 +17,6 @@ Erstellt anhand des **Projekt‑Briefs v1.0 (STRIKT)**.
 4. F5
 
 > Hinweis: `Steam einlesen` verwendet Registry + `libraryfolders.vdf` + optionale Store‑API (Header/Short‑Desc). Ohne Internet/Steam läuft der **lokale Scan** trotzdem.
+
+[![CI](https://github.com/RiseStudio-Backoffice/PixelBeav.App/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RiseStudio-Backoffice/PixelBeav.App/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/RiseStudio-Backoffice/PixelBeav.App?display_name=tag)](https://github.com/RiseStudio-Backoffice/PixelBeav.App/releases)
