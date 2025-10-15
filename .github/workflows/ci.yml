@@ -1,24 +1,23 @@
-name: CI
+﻿name: CI
 
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:  # manueller Startknopf
 
 jobs:
-  build:
+  build:                # ← Job-ID
+    name: build         # ← Job-Name (erscheint als "CI / build")
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup .NET 9
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'
-      - name: Restore
-        run: dotnet restore PixelBeavLibrary.sln
-      - name: Build (Release)
-        run: dotnet build PixelBeavLibrary.sln -c Release --no-restore
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '9.0.x' }
+      - run: dotnet restore PixelBeavLibrary.sln
+      - run: dotnet build PixelBeavLibrary.sln -c Release --no-restore
+
       # Uncomment if you add tests
       # - name: Test
       #   run: dotnet test PixelBeavLibrary.sln -c Release --no-build --verbosity normal
