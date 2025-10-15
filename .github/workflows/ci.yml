@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Restore
+        run: dotnet restore PixelBeavLibrary.sln
+      - name: Build (Release)
+        run: dotnet build PixelBeavLibrary.sln -c Release --no-restore
+      # Uncomment if you add tests
+      # - name: Test
+      #   run: dotnet test PixelBeavLibrary.sln -c Release --no-build --verbosity normal

@@ -1,0 +1,31 @@
+name: Bug Report
+description: Melde einen Fehler in PixelBeav
+labels: ["bug"]
+body:
+  - type: textarea
+    id: desc
+    attributes:
+      label: Beschreibung
+      description: Was ist passiert? Was hast du erwartet?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte zum Reproduzieren
+      description: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: z.B. PixelBeav Version 1.16
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/Crash
+      description: Konsole/Stacktrace/Logauszug (falls vorhanden)

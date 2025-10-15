@@ -1,0 +1,23 @@
+name: Feature Request
+description: Schlage eine Verbesserung oder ein neues Feature vor
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Welches Problem löst das Feature?
+  - type: textarea
+    id: solution
+    attributes:
+      label: Lösung
+      description: Was soll die App tun?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativen
+  - type: input
+    id: priority
+    attributes:
+      label: Priorität
+      placeholder: niedrig / mittel / hoch

@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Compute version from tag
+        id: version
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF##*/}"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          NAME="PixelBeav Version ${TAG#v}"
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+          FILE="PixelBeav_${TAG#v}.zip"
+          echo "file=$FILE" >> $GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore PixelBeavLibrary.sln
+
+      - name: Publish (win-x64, framework-dependent)
+        run: |
+          dotnet publish PixelBeav.App/PixelBeav.App.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=false -o publish/win-x64
+      
+      - name: Create archive
+        shell: bash
+        run: |
+          cd publish/win-x64
+          7z a "../../${{ steps.version.outputs.file }}" *
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.version.outputs.file }}
+          path: ${{ github.workspace }}/${{ steps.version.outputs.file }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.name }}
+          draft: false
+          prerelease: false
+          files: ${{ steps.version.outputs.file }}
