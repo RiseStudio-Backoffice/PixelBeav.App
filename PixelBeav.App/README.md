@@ -18,5 +18,3 @@ Erstellt anhand des **Projekt‑Briefs v1.0 (STRIKT)**.
 
 > Hinweis: `Steam einlesen` verwendet Registry + `libraryfolders.vdf` + optionale Store‑API (Header/Short‑Desc). Ohne Internet/Steam läuft der **lokale Scan** trotzdem.
 
-[![CI](https://github.com/RiseStudio-Backoffice/PixelBeav.App/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RiseStudio-Backoffice/PixelBeav.App/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/RiseStudio-Backoffice/PixelBeav.App?display_name=tag)](https://github.com/RiseStudio-Backoffice/PixelBeav.App/releases)
