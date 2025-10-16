@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
 
 namespace PixelBeav.App.Views
@@ -19,6 +19,11 @@ namespace PixelBeav.App.Views
                 btn.ContextMenu.Placement = PlacementMode.Bottom;
                 btn.ContextMenu.IsOpen = true;
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

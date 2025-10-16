@@ -1,33 +1,60 @@
 <Window x:Class="PixelBeav.App.Views.BlacklistWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:PixelBeav.App.ViewModels"
-        Title="Blacklist verwalten" Width="560" Height="420" WindowStartupLocation="CenterOwner">
+        mc:Ignorable="d"
+        Title="Blacklist verwalten" Height="460" Width="600"
+        WindowStartupLocation="CenterOwner" MinHeight="360" MinWidth="520">
     <Window.DataContext>
-        <vm:BlacklistViewModel/>
+        <vm:BlacklistWindowViewModel/>
     </Window.DataContext>
-    <Grid Margin="12">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <TextBlock Text="Geblacklistete Titel (erneut aufnehmen = aus Blacklist entfernen):" Margin="0,0,0,8" />
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Padding="12" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
+            <TextBlock Text="Geblacklistete Titel – markierte entfernen, um sie wieder in der Thumbnail-Liste anzuzeigen."
+                       TextWrapping="Wrap"/>
+        </Border>
 
-        <ListBox Grid.Row="1" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected, Mode=TwoWay}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-            <Button Content="Aus Blacklist entfernen" IsEnabled="{Binding HasSelection}" Command="{Binding RestoreSelectedCommand}" Margin="0,0,8,0"/>
-            <Button Content="Schließen" IsCancel="True"/>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,8,8">
+            <Button Content="Auswahl entfernen" Margin="0,0,8,0" Command="{Binding RemoveSelectedCommand}" IsEnabled="{Binding HasSelection}"/>
+            <Button Content="Schließen" IsCancel="True" />
         </StackPanel>
-    </Grid>
+
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Watermark-Searchbox (WPF-Style) -->
+            <Grid Margin="0,0,0,8">
+                <TextBox x:Name="SearchBox" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Suchen…" IsHitTestVisible="False" Margin="6,4,0,0" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <ListView Grid.Row="1"
+                      ItemsSource="{Binding FilteredItems}"
+                      SelectedItem="{Binding Selected, Mode=TwoWay}"
+                      SelectionMode="Extended">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </DockPanel>
 </Window>

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using PixelBeav.App.Views;
 
 namespace PixelBeav.App.ViewModels
 {
@@ -158,7 +159,8 @@ namespace PixelBeav.App.ViewModels
         private void ChooseFolder()
         {
             using var dlg = new FolderBrowserDialog();
-            dlg.Description = "Root-Ordner mit lokalen Spielen wÃ¤hlen";
+
+            dlg.Description = "Root-Ordner mit lokalen Spielen wählen";
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 _config.RootFolder = dlg.SelectedPath;
@@ -170,7 +172,7 @@ namespace PixelBeav.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(_config.RootFolder) || !Directory.Exists(_config.RootFolder))
             {
-                System.Windows.MessageBox.Show("Bitte zuerst â€šOrdner wÃ¤hlenâ€˜.", "Neu scannen", MessageBoxButton.OK, MessageBoxImage.Information);
+                System.Windows.MessageBox.Show("Bitte zuerst ‚Ordner wählen‘.", "Neu scannen", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             var list = new List<GameEntry>();
@@ -189,7 +191,7 @@ namespace PixelBeav.App.ViewModels
                     FolderPath = dir,
                     IsGame = isGame,
                     HeaderImageUri = "Assets/placeholder.png",
-                    ShortDescription = isGame ? "Lokal erkannt â€“ keine Steam-Metadaten (noch)." : "Ausgefiltert (kein Game)."
+                    ShortDescription = isGame ? "Lokal erkannt – keine Steam-Metadaten (noch)." : "Ausgefiltert (kein Game)."
                 });
             }
             Games.Clear();
@@ -209,13 +211,13 @@ namespace PixelBeav.App.ViewModels
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Ordner konnte nicht geÃ¶ffnet werden: {ex.Message}");
+                System.Windows.MessageBox.Show($"Ordner konnte nicht geöffnet werden: {ex.Message}");
             }
         }
 
         private void OpenThumbnails()
         {
-            System.Windows.MessageBox.Show("Thumbnails-Dialog (Stub) â€“ wird in einem spÃ¤teren Schritt implementiert.", "Thumbnails");
+            System.Windows.MessageBox.Show("Thumbnails-Dialog (Stub) – wird in einem späteren Schritt implementiert.", "Thumbnails");
         }
 
         private async Task EnsureThumbsAsync()
@@ -237,26 +239,29 @@ namespace PixelBeav.App.ViewModels
             if (g == null) return;
             var key = string.IsNullOrWhiteSpace(g.FolderPath) ? g.Title : g.FolderPath;
             try
+
             {
                 StorageService.AddToBlacklist(key);
+                _blacklist.Add(key);
                 Games.Remove(g);
                 StorageService.SaveGames(Games.ToList());
                 OnPropertyChanged(nameof(FilteredGames));
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Eintrag konnte nicht entfernt werden: {ex.Message}", "LÃ¶schen", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show($"Eintrag konnte nicht entfernt werden: {ex.Message}", "Löschen", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void ShowBlacklist()
         {
-            if (_blacklist == null || _blacklist.Count == 0)
-            {
-                System.Windows.MessageBox.Show("Die Blacklist ist leer.", "Blacklist", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-            var text = string.Join(System.Environment.NewLine, _blacklist);
-            System.Windows.MessageBox.Show(text, "Blacklist", MessageBoxButton.OK, MessageBoxImage.Information);
+            var wnd = new BlacklistWindow();
+            wnd.Owner = System.Windows.Application.Current?.MainWindow;
+            wnd.ShowDialog();
+
+            // Nach dem Schließen: Blacklist neu laden und Liste auffrischen
+            _blacklist = StorageService.LoadBlacklist();
+            BlacklistItems.Clear();
+            if (!string.IsNullOrWhiteSpace(_config.RootFolder) && Directory.Exists(_config.RootFolder)) Rescan();
         }
 
     }
