@@ -48,22 +48,61 @@
                                     Background="{x:Null}" BorderBrush="{x:Null}" ToolTip="Entfernen" Panel.ZIndex="2">
                                     <Image Source="pack://application:,,,/PixelBeav.App;component/Assets/close.png" Width="20" Height="20" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 </Button> -->
+                                
+                                <!-- TILE HAMBURGER BUTTON (updated) -->
                                 <Button Width="24" Height="24" Padding="0"
                                     HorizontalAlignment="Right" VerticalAlignment="Top" Margin="3"
-                                    Background="{x:Null}" BorderBrush="{x:Null}" ToolTip="Menü" Panel.ZIndex="2">
+                                    Background="Transparent" BorderBrush="{x:Null}" ToolTip="Menü" Panel.ZIndex="2"
+                                    Click="TileHamburger_Click">
+                                    
+                                    <!-- Style with hover/pressed background -->
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="border"
+                                                                Background="{TemplateBinding Background}"
+                                                                CornerRadius="4">
+                                                            <ContentPresenter HorizontalAlignment="Center"
+                                                                              VerticalAlignment="Center"
+                                                                              RecognizesAccessKey="True"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="border" Property="Background" Value="#FFE0E0E0"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter TargetName="border" Property="Background" Value="#FFCFCFCF"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Button.Style>
+
+                                    <!-- ContextMenu BEFORE Content to avoid MC3088 -->
                                     <Button.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Header="Entfernen"
                                                 Command="{Binding DataContext.DeleteGameCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding}"
-                                             />
+                                                CommandParameter="{Binding}"/>
                                         </ContextMenu>
                                     </Button.ContextMenu>
-                                    <Grid Width="14" Height="12" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True">
-                                        <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Top"/>
-                                        <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Center"/>
-                                        <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Bottom"/>
-                                    </Grid>
+
+                                    <!-- Icon content -->
+                                    <Button.Content>
+                                        <Grid Width="14" Height="12" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True">
+                                            <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Top"/>
+                                            <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Center"/>
+                                            <Rectangle Height="2" Fill="White" RadiusX="1" RadiusY="1" VerticalAlignment="Bottom"/>
+                                        </Grid>
+                                    </Button.Content>
                                 </Button>
                             </Grid>
                         </Border>
@@ -90,7 +129,6 @@
                 <Button Content="Duplikate entfernen" Command="{Binding DeduplicateCommand}" Margin="0,0,8,0"/>
                 <Button Content="Ordner wählen" Command="{Binding ChooseFolderCommand}" Margin="0,0,8,0"/>
                 <Button Content="Neu scannen" Command="{Binding RescanCommand}" Margin="0,0,8,0"/>
-                <Button Content="Blacklist…" Command="{Binding ShowBlacklistCommand}" Margin="0,0,8,0"/>
                 <CheckBox Content="Nur Games" IsChecked="{Binding OnlyGames}" VerticalAlignment="Center"/>
             </StackPanel>
 

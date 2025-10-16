@@ -15,6 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\MainWindow.xaml~RFaa28e700.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\placeholder.png" />
     <Resource Include="Assets\close.png" />
   </ItemGroup>
