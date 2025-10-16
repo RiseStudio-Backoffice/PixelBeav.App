@@ -1,17 +1,18 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 
 namespace PixelBeav.App.Views
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            if (this.DataContext == null)
+                this.DataContext = new PixelBeav.App.ViewModels.MainViewModel();
         }
 
-        // Linksklick auf den Tile-Hamburger öffnet sein ContextMenu direkt am Button
-        private void TileHamburger_Click(object sender, RoutedEventArgs e)
+        private void Gear_Click(object sender, RoutedEventArgs e)
         {
             if (sender is System.Windows.Controls.Button btn && btn.ContextMenu != null)
             {
@@ -19,11 +20,7 @@ namespace PixelBeav.App.Views
                 btn.ContextMenu.Placement = PlacementMode.Bottom;
                 btn.ContextMenu.IsOpen = true;
             }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
+            e.Handled = true;
         }
     }
 }

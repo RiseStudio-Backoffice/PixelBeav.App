@@ -1,0 +1,11 @@
+<Window x:Class="PixelBeav.App.Views.CollectionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Kollektionen" Height="360" Width="420" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <DockPanel Margin="10">
+        <TextBlock DockPanel.Dock="Top" Text="Bitte Kollektion auswählen:" FontWeight="Bold" Margin="0,0,0,8"/>
+        <ListBox x:Name="List"
+                 MouseDoubleClick="List_MouseDoubleClick"
+                 KeyDown="List_KeyDown"/>
+    </DockPanel>
+</Window>

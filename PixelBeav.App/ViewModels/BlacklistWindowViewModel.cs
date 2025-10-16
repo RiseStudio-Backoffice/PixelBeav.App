@@ -1,9 +1,8 @@
-using PixelBeav.App; // for RelayCommand
+
 using PixelBeav.App.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -20,12 +19,13 @@ namespace PixelBeav.App.ViewModels
         public string Query { get => _query; set { _query = value; OnPropertyChanged(); FilteredItems.Refresh(); } }
         public bool HasSelection => !string.IsNullOrWhiteSpace(Selected);
 
-        public ICommand RemoveSelectedCommand { get; }
+        public ICommand RestoreCommand { get; }
+        public ICommand CloseCommand { get; }
 
         public BlacklistWindowViewModel()
         {
-            foreach (var s in BlacklistService.GetAll())
-                Items.Add(s);
+            foreach (var key in StorageService.GetBlacklist())
+                Items.Add(key);
 
             FilteredItems = CollectionViewSource.GetDefaultView(Items);
             FilteredItems.Filter = o =>
@@ -35,14 +35,23 @@ namespace PixelBeav.App.ViewModels
                 return false;
             };
 
-            RemoveSelectedCommand = new RelayCommand(_ => RemoveSelected(), _ => HasSelection);
+            RestoreCommand = new RelayCommand(_ => Restore(), _ => HasSelection);
+            CloseCommand = new RelayCommand(w => (w as System.Windows.Window)?.Close());
+            StorageService.BlacklistChanged += SyncFromService;
         }
 
-        private void RemoveSelected()
+        private void SyncFromService()
+        {
+            var set = new System.Collections.Generic.HashSet<string>(StorageService.GetBlacklist(), StringComparer.OrdinalIgnoreCase);
+            for (int i = Items.Count - 1; i >= 0; i--) if (!set.Contains(Items[i])) Items.RemoveAt(i);
+            foreach (var k in set) if (!Items.Contains(k)) Items.Add(k);
+            FilteredItems.Refresh();
+        }
+
+        private void Restore()
         {
             if (Selected == null) return;
-            var set = StorageService.LoadBlacklist(); set.Remove(Selected); StorageService.SaveBlacklist(set);
-            Items.Remove(Selected);
+            StorageService.RemoveFromBlacklist(Selected);
             Selected = null;
             OnPropertyChanged(nameof(HasSelection));
             FilteredItems.Refresh();

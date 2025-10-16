@@ -5,56 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:PixelBeav.App.ViewModels"
         mc:Ignorable="d"
-        Title="Blacklist verwalten" Height="460" Width="600"
-        WindowStartupLocation="CenterOwner" MinHeight="360" MinWidth="520">
+        Title="Blackliste" Height="480" Width="520">
     <Window.DataContext>
         <vm:BlacklistWindowViewModel/>
     </Window.DataContext>
 
-    <DockPanel>
-        <Border DockPanel.Dock="Top" Padding="12" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
-            <TextBlock Text="Geblacklistete Titel – markierte entfernen, um sie wieder in der Thumbnail-Liste anzuzeigen."
-                       TextWrapping="Wrap"/>
-        </Border>
-
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,8,8">
-            <Button Content="Auswahl entfernen" Margin="0,0,8,0" Command="{Binding RemoveSelectedCommand}" IsEnabled="{Binding HasSelection}"/>
-            <Button Content="Schließen" IsCancel="True" />
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <TextBox Width="260" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0" />
+            <Button Content="Wiederherstellen" Command="{Binding RestoreCommand}" IsEnabled="{Binding HasSelection}" />
+            <Button Content="Schließen" Margin="8,0,0,0" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
         </StackPanel>
 
-        <Grid Margin="12">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <!-- Watermark-Searchbox (WPF-Style) -->
-            <Grid Margin="0,0,0,8">
-                <TextBox x:Name="SearchBox" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Suchen…" IsHitTestVisible="False" Margin="6,4,0,0" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-            </Grid>
-
-            <ListView Grid.Row="1"
-                      ItemsSource="{Binding FilteredItems}"
-                      SelectedItem="{Binding Selected, Mode=TwoWay}"
-                      SelectionMode="Extended">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+        <ListBox ItemsSource="{Binding FilteredItems}" SelectedItem="{Binding Selected, Mode=TwoWay}" />
     </DockPanel>
 </Window>
