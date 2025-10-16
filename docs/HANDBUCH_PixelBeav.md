@@ -1,23 +1,37 @@
-Repo: https://github.com/RiseStudio-Backoffice/PixelBeav.App (öffentlich, nur lesen)
-Start: Lies das Handbuch (docs/HANDBUCH_PixelBeav.md) im Repo und halte dich an die Anweisungen.
+Start: Lies das Handbuch in der von mir bereitgestellten Datei. Falls nicht vorhanden, erinnere mich daran, es dir zu geben.
+Arbeitsmodus: **ZIP‑Only** – Dateien werden von dir als ZIP/Uploads bereitgestellt und hier eingelesen; **kein Projektpaket/ZIP/bereitgestellten Uploads (ZIP/Dateien)‑Zugriff erforderlich**.
 
+# Handbuch – PixelBeav (ZIP‑Only Arbeitsmodus)
 
-# Handbuch – PixelBeav (Repo‑Only Arbeitsmodus)
+## Ergänzungen (2025-10-16)
+
+**Speicher-Reset bei Start**
+- Sofern technisch möglich, lösche alle bereits vorhandenen Erinnerungen/Personalisierungen in *diesem Chat*.
+- Ist das technisch nicht möglich, bestätige explizit: „Vorhandene Erinnerungen können hier nicht gelöscht werden. Ich ignoriere sie ab jetzt und arbeite gemäß diesem Handbuch.“
+
+**Bestätigung statt Zusammenfassung nach Lektüre**
+- Nach dem Lesen dieses Handbuchs gib *keine* Zusammenfassung aus.
+- Gib ausschließlich diese Bestätigung: **„Handbuch vollständig gelesen. Alle Befehle sind umgesetzt.“**
+- Diese Regel überschreibt ältere Vorgaben, nach der Lektüre eine Kurz- oder Langzusammenfassung zu posten.
+
+**ZIP-Dokumente vorab querlesen**
+- Lies beim Start einmal alle in der gelieferten ZIP-Datei enthaltenen Dokumente kurz durch, damit wir ohne Verzögerung mit der Programmierung fortfahren können.
+
+*Alle weiteren Inhalte dieses Handbuchs bleiben unverändert bestehen; nur direkt widersprechende Aussagen gelten als durch diese Ergänzungen ersetzt.*
+
 **Stand:** 2025-10-16
 
 Dieses Handbuch ist die verbindliche Grundlage für Änderungen an *PixelBeav* in diesem Chat.
-**Arbeitsmodus:** Kein Git‑Clone/Push. Ich lese ausschließlich **öffentliche** Repo‑Dateien über die GitHub‑Weboberfläche
+**Arbeitsmodus:** Kein ZIP‑Arbeitsweise‑Clone/Push. Ich lese ausschließlich **öffentliche** Projektpaket/ZIP‑Dateien über die bereitgestellten Uploads (ZIP/Dateien)‑Weboberfläche
 und liefere Änderungen hier im Chat (Mini‑Patch oder ZIP). To‑Dos/„zuletzt gemacht“ werden hier **nicht** geführt.
 
 ---
 
 ## 0) Rollen & Möglichkeiten
-- **Assistent (dieser Chat):** Darf öffentliche Dateien **lesen**, aber **nicht** ins Repo schreiben. Liefert Änderungen als
+- **Assistent (dieser Chat):** Liest ausschließlich bereitgestellte Dateien (ZIP/Einzeldateien); **kein** Projektpaket/ZIP‑Zugriff. Liefert Änderungen als
   **Mini‑Patch** (inline) oder als **ZIP**.
-- **Nutzer:in:** Spielt gelieferte Dateien ins Repo ein und testet lokal.
-- **Konsequenz:** Änderungen entstehen **hier**, Tests/Commits geschehen **bei dir**.
+- **Konsequenz:** Änderungen entstehen **hier**, Einspielen/Tests geschehen **bei dir**.
 
-## 1) Projekt‑Überblick (konstant)
 - **Technik:** .NET 9 + WPF (Windows). WinForms nur für `FolderBrowserDialog`.
 - **Release‑Bezeichnung:** „**PixelBeav Version {MAJOR.MINOR}**“ (Zählweise durch dich).
 - **Layout‑Prinzip:** Links **2 Spalten**; Kacheln **320×150 px**, abgerundete Ecken, kein automatisches Mitwachsen.
@@ -29,17 +43,14 @@ und liefere Änderungen hier im Chat (Mini‑Patch oder ZIP). To‑Dos/„zuletz
 
 ## 2) Namensschema & Lieferformate
 - **App‑Release‑ZIP:** **`PixelBeav App Version {MAJOR.MINOR}.zip`**  
-  Inhalt **flat im Root** (Solution, `PixelBeav.App/`, Meta‑Ordner). Direkt in euren Projektordner `pixelbeav.app/` kopierbar.
-- **Einzeldatei‑Änderung als ZIP (Docs/Assets/etc.):** ZIP heißt **exakt wie die Datei** + `.zip` und enthält die **Original‑Ordnerstruktur**.  
   Beispiel: `docs/HANDBUCH_PixelBeav.md` → ZIP‑Name: `HANDBUCH_PixelBeav.md.zip` mit `docs/` im Archiv.
-- **Mini‑Änderungen (< 3 Zeilen pro Datei):** Direkt **inline** im Chat mit **Pfad + Zeilenbereich** (Vorher → Nachher). Kein ZIP.
 - **Kein Versionsbump** für kleine Änderungen; bei vollständigem App‑Release wird die Version durch dich erhöht.
+
 
 ## 3) Meldungen (Symbolsprache & Standardblock)
 **Symbole**
 - **✅** Erfolg / Ergebnis
 - **⚙️** Info / Konfiguration / Hinweis
-- **⚠️** Warnung / Risiko / Bitte prüfen
 - **🚨** Blocker / Fehler / Sofortaktion
 
 **Standardblock (immer nutzen)**
@@ -47,7 +58,6 @@ und liefere Änderungen hier im Chat (Mini‑Patch oder ZIP). To‑Dos/„zuletz
 ✅/⚙️/⚠️/🚨
 Typ: (Erfolg/Info/Warnung/Blocker)
 Kontext: Datei/Feature/Bereich
-Beschreibung: Was & warum (kurz, präzise)
 Aktion: Konkreter nächster Schritt (Kopieren, Build, Test)
 ```
 
@@ -64,11 +74,9 @@ Aktion: Für schnelle Wirkung XAML‑Visibility → Collapsed. Für vollständig
 - **UI‑Element ausblenden (ohne Logikänderung):** XAML `Visibility="Collapsed"`.
 - **UI‑Element vollständig entfernen:** XAML löschen **und** Commands/Bindings im ViewModel entfernen.
 - **Layout‑Feintuning:** Grid‑Spalten/Zeilen, Margins, feste Breiten/Höhen, MinWidth/MaxWidth.
-- **Service‑Anpassung:** Änderungen in `ThumbnailService`, `SteamService`, `StorageService`; Call‑Sites & DI prüfen.
 - **Dokumentation:** Änderungen in `docs/*` werden als **Einzeldatei‑ZIP** geliefert.
 - **Fehlerbehebung:** Reproducer‑Schritte beschreiben, Fix bereitstellen, ggf. Guard‑Clauses/Null‑Checks ergänzen.
 
-## 5) Prozesse & Darstellungsregeln
 - **Keine Hintergrundaufgaben.** Alles wird hier im Chat geliefert.
 - **Code‑Darstellung:** Kurze Snippets in ```…```‑Blöcken, längere Änderungen als **Diff** mit Zeilenbereichen.
 - **UI‑Regel:** Keine „magischen“ Werte; Konstanten dokumentieren (z. B. 320×150).
@@ -76,35 +84,30 @@ Aktion: Für schnelle Wirkung XAML‑Visibility → Collapsed. Für vollständig
 - **Resilienz:** Null‑Checks, Exceptions mit Kontext, Logging hooks optional skizzieren.
 - **Barrierefreiheit (sofern relevant):** ToolTips/AutomationProperties für wichtige Controls.
 
-## 6) Ablaufplan (Repo‑Only)
+## 6) Ablaufplan (ZIP‑Only)
 1) **Änderungswunsch** (fachlich) nennen.  
-2) **Lokalisierung** durch mich via Repo‑Dateien (lesen).  
+2) **Lokalisierung** durch mich via bereitgestelltem **ZIP**/Einzeldateien (lesen).  
 3) **Lieferform wählen:** Mini‑Patch (inline) **oder** ZIP (siehe §2).  
 4) **Einspielen & Test** durch dich.  
 5) **Feedback** → nächste Iteration.
 
 ## 7) Speicherorte & Hinweise
-- **Kanonischer Speicherort des Handbuchs im Repo:** `docs/HANDBUCH_PixelBeav.md`.
 - **Aktualisierung des Handbuchs:** Lieferung als **Einzeldatei‑ZIP** (siehe §2) oder – bei Mini‑Korrekturen – als Inline‑Patch.
 - **Hinweis zu Code‑ZIPs:** App‑Releases sind **flat** und sofort in `pixelbeav.app/` kopierbar; keine zusätzlichen Oberordner.
 
 ## 8) Technische Hinweise (Meldungscode, Stil)
 - **Meldungscode** = der Block aus §3; in jeder Lieferung enthalten.
 - **XAML‑Stil:** Explizite `Grid.ColumnDefinitions`/`RowDefinitions`, klare Margins/Paddings, `ClipToBounds` bewusst setzen.
-- **C#‑Stil:** `async`/`await` sauber, Commands via `ICommand`, PropertyChanged minimal‑alloc.
 - **Assets:** Pfadkonvention `Assets/*`, Größenangaben dokumentieren.
 
 ## 9) Grenzen & Klarstellungen
-- Kein direkter Repo‑Schreibzugriff; kein Git‑Push.
-- Lesen nur öffentlicher Dateien; private Inhalte bitte hier hochladen.
+- Kein direkter Projektpaket/ZIP‑Schreibzugriff; kein ZIP‑Arbeitsweise‑Push.
 - Keine To‑Do‑Listen, keine Historie „zuletzt gemacht“ im Handbuch.
 - Alles weitere wird kontextbezogen im Chat entschieden.
 
 ---
 
 
-## 10) Projektsteckbrief (optional, 1 Seite)
-*Zweck:* Diese Seite fasst das Projekt so zusammen, dass ein neuer Chat ohne Vorwissen sofort arbeitsfähig ist. Kein Duplikat des Handbuchs – nur die **einzigartigen Eckdaten**.
 
 **Bitte ausfüllen (Beispielstruktur):**
 ```
@@ -112,7 +115,6 @@ Projektname: PixelBeav – Beschreibungs-Generator + WPF-App
 Einzeiler (Warum?): Erzeugt konsistente YouTube-Beschreibungen & verwaltet Spiele-Thumbs.
 Zielgruppe/Persona: Solo-Creator; deutschsprachig; Windows; VS2022.
 Plattform/Stack: Windows, .NET 9, WPF; keine MAUI; WinForms nur FolderBrowserDialog.
-Kernfunktionen (MVP, priorisiert 1–3):
   1) Beschreibungs-Generator (PixelBeav-Standard, Steam-Kurzblurb integriert)
   2) UI: 2-Spalten-Thumb-Ansicht (320×150), Details rechts; Close 20×20
   3) Blacklist (sofort ausblenden, Persistenz)
@@ -155,7 +157,7 @@ Bekannte Risiken/Fragen: <Liste>
 - Stil: Deutsch, ruhig‑erklärend mit Humor; konsistent zu bestehenden Serien (ASKA/FOUNDRY).
 
 ## 15) Fallbacks & Fehlerfälle
-- **Repo nicht erreichbar:** Nutzer:in lädt benötigte Dateien (oder ZIP) hier hoch.
+- **ZIP/Dateien noch nicht bereitgestellt:** Bitte die benötigten Dateien oder ein vollständiges **Projekt‑ZIP** hier hochladen.
 - **Unklare Anweisung:** Ich liefere einen **sicheren** Vorschlag (z. B. Visibility=Collapsed) und mache Annahmen transparent.
 - **Zu große Änderung für Mini‑Patch:** Ich schlage **ZIP‑Lieferung** vor und liste betroffene Dateien.
 
