@@ -1,4 +1,3 @@
-
 using PixelBeav.App.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -43,8 +42,14 @@ namespace PixelBeav.App.ViewModels
         private void SyncFromService()
         {
             var set = new System.Collections.Generic.HashSet<string>(StorageService.GetBlacklist(), StringComparer.OrdinalIgnoreCase);
-            for (int i = Items.Count - 1; i >= 0; i--) if (!set.Contains(Items[i])) Items.RemoveAt(i);
-            foreach (var k in set) if (!Items.Contains(k)) Items.Add(k);
+            for (int i = Items.Count - 1; i >= 0; i--)
+            {
+                if (!set.Contains(Items[i])) Items.RemoveAt(i);
+            }
+            foreach (var k in set)
+            {
+                if (!Items.Contains(k)) Items.Add(k);
+            }
             FilteredItems.Refresh();
         }
 

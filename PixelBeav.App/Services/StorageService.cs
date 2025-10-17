@@ -3,83 +3,137 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 
 namespace PixelBeav.App.Services
 {
     public static class StorageService
     {
-        private static readonly string Roaming = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        private static readonly string AppDataDir = Path.Combine(Roaming, "PixelBeav.App");
+        private static readonly string AppDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PixelBeav.App");
         private static readonly string ConfigPath = Path.Combine(AppDataDir, "config.json");
         private static readonly string GamesPath  = Path.Combine(AppDataDir, "games.json");
         private static readonly string BlacklistPath = Path.Combine(AppDataDir, "blacklist.json");
 
         private static readonly JsonSerializerOptions JsonOpts = new JsonSerializerOptions { WriteIndented = true };
-        public static event Action? BlacklistChanged;
 
-        private static string ReadTextTolerant(string path)
+        public class AppConfig
         {
-            if (!File.Exists(path)) return string.Empty;
-            var bytes = File.ReadAllBytes(path);
-            var utf8 = Encoding.UTF8.GetString(bytes);
-            if (!utf8.Contains("\uFFFD")) return utf8;
-            return Encoding.GetEncoding(1252).GetString(bytes);
+            public string? RootFolder { get; set; }
         }
 
-        private static T? LoadJson<T>(string path) where T : class
+        public static event Action? BlacklistChanged;
+
+        // ---------- Config ----------
+        public static AppConfig LoadConfig()
         {
             try
             {
-                var txt = ReadTextTolerant(path);
-                if (string.IsNullOrWhiteSpace(txt)) return null;
-                return JsonSerializer.Deserialize<T>(txt);
+                if (File.Exists(ConfigPath))
+                {
+                    var txt = File.ReadAllText(ConfigPath);
+                    return JsonSerializer.Deserialize<AppConfig>(txt) ?? new AppConfig();
+                }
             }
-            catch { return null; }
-        }
-        private static void SaveJson<T>(string path, T data)
-        {
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            var json = JsonSerializer.Serialize(data, JsonOpts);
-            File.WriteAllText(path, json, new UTF8Encoding(false));
+            catch { }
+            return new AppConfig();
         }
 
-        public class AppConfig { public string? RootFolder { get; set; } }
-        public static AppConfig LoadConfig() => LoadJson<AppConfig>(ConfigPath) ?? new AppConfig();
-        public static void SaveConfig(AppConfig config) => SaveJson(ConfigPath, config ?? new AppConfig());
-        public static List<GameEntry> LoadGames() => LoadJson<List<GameEntry>>(GamesPath) ?? new List<GameEntry>();
+        public static void SaveConfig(AppConfig config)
+        {
+            Directory.CreateDirectory(AppDataDir);
+            var json = JsonSerializer.Serialize(config ?? new AppConfig(), JsonOpts);
+            File.WriteAllText(ConfigPath, json);
+        }
+
+        // ---------- Games ----------
+        public static List<GameEntry> LoadGames()
+        {
+            try
+            {
+                if (File.Exists(GamesPath))
+                {
+                    var txt = File.ReadAllText(GamesPath);
+                    return JsonSerializer.Deserialize<List<GameEntry>>(txt) ?? new List<GameEntry>();
+                }
+            }
+            catch { }
+            return new List<GameEntry>();
+        }
 
         public static void SaveGames(List<GameEntry> games)
         {
-            // De-dup by SteamAppId -> ExecutablePath -> Title
-            var dict = new Dictionary<string, GameEntry>(StringComparer.OrdinalIgnoreCase);
-            foreach (var g in games ?? new List<GameEntry>())
-            {
-                var id = g.GetType().GetProperty("SteamAppId")?.GetValue(g) as string;
-                var exe = g.GetType().GetProperty("ExecutablePath")?.GetValue(g) as string;
-                var title = g.GetType().GetProperty("Title")?.GetValue(g) as string ?? string.Empty;
-                string key = !string.IsNullOrWhiteSpace(id) ? $"id:{id}"
-                            : !string.IsNullOrWhiteSpace(exe) ? $"exe:{exe}"
-                            : $"title:{title}";
-                if (!dict.ContainsKey(key)) dict[key] = g;
-            }
-            SaveJson(GamesPath, dict.Values.ToList());
+            Directory.CreateDirectory(AppDataDir);
+            var list = games ?? new List<GameEntry>();
+            var json = JsonSerializer.Serialize(list, JsonOpts);
+            File.WriteAllText(GamesPath, json);
         }
 
+        // ---------- Blacklist ----------
         private static HashSet<string>? _blacklistCache;
-        private static readonly StringComparer KeyCmp = StringComparer.OrdinalIgnoreCase;
 
         private static void EnsureBlacklistLoaded()
         {
             if (_blacklistCache != null) return;
-            _blacklistCache = LoadJson<HashSet<string>>(BlacklistPath) ?? new HashSet<string>(KeyCmp);
+            try
+            {
+                if (File.Exists(BlacklistPath))
+                {
+                    var txt = File.ReadAllText(BlacklistPath);
+                    var list = JsonSerializer.Deserialize<List<string>>(txt) ?? new List<string>();
+                    _blacklistCache = new HashSet<string>(list, StringComparer.OrdinalIgnoreCase);
+                }
+                else
+                {
+                    _blacklistCache = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                }
+            }
+            catch
+            {
+                _blacklistCache = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
         }
-        private static void SaveBlacklist() => SaveJson(BlacklistPath, _blacklistCache?.ToList() ?? new List<string>());
 
-        public static IEnumerable<string> GetBlacklist() { EnsureBlacklistLoaded(); return _blacklistCache!.ToList(); }
-        public static bool IsBlacklisted(string key) { if (string.IsNullOrWhiteSpace(key)) return false; EnsureBlacklistLoaded(); return _blacklistCache!.Contains(key); }
-        public static void AddToBlacklist(string key) { if (string.IsNullOrWhiteSpace(key)) return; EnsureBlacklistLoaded(); if (_blacklistCache!.Add(key)) { SaveBlacklist(); BlacklistChanged?.Invoke(); } }
-        public static void RemoveFromBlacklist(string key) { if (string.IsNullOrWhiteSpace(key)) return; EnsureBlacklistLoaded(); if (_blacklistCache!.Remove(key)) { SaveBlacklist(); BlacklistChanged?.Invoke(); } }
+        private static void SaveBlacklistInternal()
+        {
+            Directory.CreateDirectory(AppDataDir);
+            var list = _blacklistCache?.ToList() ?? new List<string>();
+            var json = JsonSerializer.Serialize(list, JsonOpts);
+            File.WriteAllText(BlacklistPath, json);
+        }
+
+        public static IEnumerable<string> GetBlacklist()
+        {
+            EnsureBlacklistLoaded();
+            return _blacklistCache!.ToList();
+        }
+
+        public static bool IsBlacklisted(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key)) return false;
+            EnsureBlacklistLoaded();
+            return _blacklistCache!.Contains(key);
+        }
+
+        public static void AddToBlacklist(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key)) return;
+            EnsureBlacklistLoaded();
+            if (_blacklistCache!.Add(key))
+            {
+                SaveBlacklistInternal();
+                BlacklistChanged?.Invoke();
+            }
+        }
+
+        public static void RemoveFromBlacklist(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key)) return;
+            EnsureBlacklistLoaded();
+            if (_blacklistCache!.Remove(key))
+            {
+                SaveBlacklistInternal();
+                BlacklistChanged?.Invoke();
+            }
+        }
     }
 }

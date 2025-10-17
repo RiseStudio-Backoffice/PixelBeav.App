@@ -8,11 +8,11 @@ namespace PixelBeav.App.Views
         public MainWindow()
         {
             InitializeComponent();
-            if (this.DataContext == null)
-                this.DataContext = new PixelBeav.App.ViewModels.MainViewModel();
+            // Set DataContext at runtime to avoid XAML resolver issues
+            this.DataContext = new PixelBeav.App.ViewModels.MainViewModel();
         }
 
-        private void Gear_Click(object sender, RoutedEventArgs e)
+        private void Hamburger_Click(object sender, RoutedEventArgs e)
         {
             if (sender is System.Windows.Controls.Button btn && btn.ContextMenu != null)
             {

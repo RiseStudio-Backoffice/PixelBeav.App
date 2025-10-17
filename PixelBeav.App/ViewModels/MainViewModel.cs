@@ -1,4 +1,4 @@
-﻿using PixelBeav.App.Models;
+using PixelBeav.App.Models;
 using PixelBeav.App.Services;
 using PixelBeav.App.Views;
 using System;
@@ -24,8 +24,9 @@ namespace PixelBeav.App.ViewModels
         public string SearchText { get => _searchText; set { _searchText = value; OnPropertyChanged(); FilteredGames.Refresh(); } }
 
         public ICommand DeleteGameCommand { get; }
+        public ICommand OpenFolderCommand { get; }
         public ICommand ShowBlacklistCommand { get; }
-        public ICommand OpenCollectionsCommand { get; }
+        public ICommand RescanCommand { get; }
 
         public MainViewModel()
         {
@@ -36,8 +37,9 @@ namespace PixelBeav.App.ViewModels
             FilteredGames.Filter = FilterPredicate;
 
             DeleteGameCommand = new RelayCommand(p => MoveToBlacklist(p as GameEntry ?? SelectedGame), p => (p as GameEntry) != null || SelectedGame != null);
+            OpenFolderCommand = new RelayCommand(_ => { }, _ => SelectedGame != null);
             ShowBlacklistCommand = new RelayCommand(_ => ShowBlacklist());
-            OpenCollectionsCommand = new RelayCommand(_ => OpenCollections());
+            RescanCommand = new RelayCommand(_ => Rescan());
 
             StorageService.BlacklistChanged += () => System.Windows.Application.Current?.Dispatcher?.Invoke(() => FilteredGames.Refresh());
         }
@@ -74,6 +76,7 @@ namespace PixelBeav.App.ViewModels
             var key = GetKey(g);
             StorageService.AddToBlacklist(key);
             FilteredGames.Refresh();
+            if (SelectedGame == g) SelectedGame = null;
         }
 
         private void ShowBlacklist()
@@ -83,21 +86,7 @@ namespace PixelBeav.App.ViewModels
             wnd.Show();
         }
 
-        private void OpenCollections()
-        {
-            var dlg = new CollectionsWindow();
-            dlg.Owner = System.Windows.Application.Current?.MainWindow;
-            if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.SelectedCollection))
-            {
-                var added = SteamScanService.AddCollectionAndReturn(dlg.SelectedCollection!);
-                // Neu hinzugekommene Thumbnails ganz oben einfügen (Reihenfolge beibehalten)
-                for (int i = added.Count - 1; i >= 0; i--)
-                    AllGames.Insert(0, added[i]);
-                FilteredGames.Refresh();
-            }
-        }
-
-        private void ReloadFromStorage()
+        private void Rescan()
         {
             var current = StorageService.LoadGames();
             AllGames.Clear();
