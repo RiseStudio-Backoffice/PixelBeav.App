@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/docs/NewChat/make_release_folder.ps1
+/docs/NewChat/make_release_folder.bat
+/docs/NewChat/Startsatz.txt
+/docs/NewChat/README_NewChat_Tools.txt
+/docs/NewChat/HANDBUCH_PixelBeav.md
