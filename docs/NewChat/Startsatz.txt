@@ -1,0 +1,2 @@
+PixelBeav - Version 1.0
+Lies das Handbuch in der beiliegenden ZIP; danach automatisch VERSION.txt, PATCH_NOTES.txt, PROJECT_TREE.txt und ENV.txt laden (Docs/NewChat → Docs → Root).

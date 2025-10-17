@@ -1,0 +1,8 @@
+<Project>
+  <!-- Expose Docs/NewChat files in Solution Explorer under each project without modifying .sln/.csproj -->
+  <ItemGroup Condition="Exists('Docs/NewChat')">
+    <None Include="Docs/NewChat/**/*.*"
+          Visible="true"
+          Link="Docs/NewChat/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

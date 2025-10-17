@@ -1,0 +1,17 @@
+{
+  "type": "google_sheets_titles",
+  "columns": {
+    "game": "Game",
+    "title": "Title",
+    "episode": "Episode",
+    "date": "Date",
+    "tags": "Tags"
+  },
+  "match": {
+    "by": [
+      "steamAppId",
+      "gameName"
+    ],
+    "prefer": "steamAppId"
+  }
+}
