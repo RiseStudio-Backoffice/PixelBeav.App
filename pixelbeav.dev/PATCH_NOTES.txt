@@ -1,0 +1,5 @@
+[PixelBeav Release: 1.1  |  2025-10-18  |  Changed: no]
+# PATCH_NOTES
+# Format je Zeile: Ersetzen|Hinzufügen ; <Pfad/Datei>
+
+Hinzufügen ; Directory.Build.targets

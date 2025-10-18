@@ -1,4 +1,0 @@
-# PATCH_NOTES
-# Format je Zeile: Ersetzen|Hinzufügen ; <Pfad/Datei>
-
-Hinzufügen ; Directory.Build.targets

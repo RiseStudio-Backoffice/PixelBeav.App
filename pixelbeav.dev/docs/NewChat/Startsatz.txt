@@ -1,0 +1,6 @@
+[PixelBeav Release: 1.1  |  2025-10-18  |  Changed: no]
+Template Startsatz (Chat-Titel-Anker & Handbuch-Pflicht)
+pixelbeav-version({MAJOR.MINOR}) — Titelvorschlag: pixelbeav-version({MAJOR.MINOR}). Kurz merken: pixelbeav-version({MAJOR.MINOR}).
+WICHTIG: Alle Infos aus dem Handbuch jetzt in den Gedächtnisspeicher übernehmen, 100 % daran halten, keine Abweichungen.
+Handbuch liegt in der ZIP unter docs/NewChat/HANDBUCH_PixelBeav.md.
+Erst Titel auf pixelbeav-version({MAJOR.MINOR}) setzen, dann das Handbuch öffnen und strikt befolgen.

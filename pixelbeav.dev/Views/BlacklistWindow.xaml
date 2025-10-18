@@ -1,0 +1,23 @@
+<!-- PixelBeav Release: 1.1  |  2025-10-18  |  Changed: no -->
+<Window x:Class="PixelBeav.App.Views.BlacklistWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PixelBeav.App.ViewModels"
+        mc:Ignorable="d"
+        Title="Blackliste" Height="480" Width="520">
+    <Window.DataContext>
+        <vm:BlacklistWindowViewModel/>
+    </Window.DataContext>
+
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <TextBox Width="260" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0" />
+            <Button Content="Wiederherstellen" Command="{Binding RestoreCommand}" IsEnabled="{Binding HasSelection}" />
+            <Button Content="Schließen" Margin="8,0,0,0" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+        </StackPanel>
+
+        <ListBox ItemsSource="{Binding FilteredItems}" SelectedItem="{Binding Selected, Mode=TwoWay}" />
+    </DockPanel>
+</Window>

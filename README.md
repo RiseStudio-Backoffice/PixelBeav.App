@@ -1,3 +1,4 @@
+[PixelBeav Release: 1.1  |  2025-10-18  |  Changed: no]
 # PixelBeav
 
 [![CI](https://github.com/RiseStudio-Backoffice/PixelBeav.App/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RiseStudio-Backoffice/PixelBeav.App/actions/workflows/ci.yml)

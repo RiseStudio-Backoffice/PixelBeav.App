@@ -1,5 +1,0 @@
-# PATCH_NOTES – Stand: 2025-10-17 12:59
-# Format je Zeile: Ersetzen|Hinzufügen ; <Pfad/Datei>
-# Beispiel:
-# Ersetzen ; PixelBeav.App/Views/MainWindow.xaml
-# Hinzufügen ; Data/imports/mappings/google_sheets_titles.json
